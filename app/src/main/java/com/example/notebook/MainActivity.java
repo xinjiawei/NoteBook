@@ -75,10 +75,10 @@ public class MainActivity extends BaseActivity implements
     private Boolean isAllFabsVisible;
 
     private SharedPreferences sharedPreferences;
-    private ToggleButton content_switch;
+    //private ToggleButton content_switch;
 
     private AlarmManager alarmManager;
-    private Achievement achievement;
+    //private Achievement achievement;
     private ListView lv_plan;
     private LinearLayout lv_layout;
     private LinearLayout lv_plan_layout;
@@ -95,7 +95,7 @@ public class MainActivity extends BaseActivity implements
         setContentView(R.layout.activity_main);
         //实例化闹钟管理器
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        achievement = new Achievement(context);
+        //achievement = new Achievement(context);
         initView();
 
     }
@@ -115,7 +115,7 @@ public class MainActivity extends BaseActivity implements
         textView = findViewById(R.id.et);
         lv = findViewById(R.id.lv);
         myToolbar = findViewById(R.id.myToolbar);
-        content_switch = findViewById(R.id.content_switch);
+        //content_switch = findViewById(R.id.content_switch);
         lv_plan = findViewById(R.id.lv_plan);
         lv_layout = findViewById(R.id.lv_layout);
         lv_plan_layout = findViewById(R.id.lv_plan_layout);
@@ -152,8 +152,8 @@ public class MainActivity extends BaseActivity implements
         //新增fab
         //mAddFab.shrink();
 
-        boolean temp = sharedPreferences.getBoolean("content_switch", false);
-        content_switch.setChecked(temp);//判断是看note还是plan
+        //boolean temp = sharedPreferences.getBoolean("content_switch", false);
+        //content_switch.setChecked(temp);//判断是看note还是plan
 
 
 
@@ -212,9 +212,30 @@ public class MainActivity extends BaseActivity implements
         mAddNoteFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                /*
+                Intent intent = new Intent(MainActivity.this, EditAlarmActivity.class);
+                intent.putExtra("mode", 2); // MODE of 'new plan'
+                startActivityForResult(intent, 1);
+                overridePendingTransition(R.anim.in_righttoleft, R.anim.no);
+
+                 */
+
+
+
+
+
+
+
+
+
+
+
                 Intent intent = new Intent(MainActivity.this, EditActivity.class);
                 intent.putExtra("mode", 4);  //新建日记
                 startActivityForResult(intent, 1);
+
+
             }
         });
 
@@ -269,7 +290,7 @@ public class MainActivity extends BaseActivity implements
             BaseCrud op = new BaseCrud(context);
             op.open();
             op.updateNote(newNote);
-            achievement.editNote(op.getNote(note_Id).getContent(), content);
+            //achievement.editNote(op.getNote(note_Id).getContent(), content);
             op.close();
         }else if (returnMode == 0) {  // 创建新笔记
             String content = data.getExtras().getString("content");
@@ -280,7 +301,7 @@ public class MainActivity extends BaseActivity implements
             op.open();
             op.addNote(newNote);
             op.close();
-            achievement.addNote(content);
+            //achievement.addNote(content);
         }else if(returnMode==2){ //删除已经创建好的笔记内容
             Note delNote=new Note();
             delNote.setId(note_Id);
@@ -288,7 +309,7 @@ public class MainActivity extends BaseActivity implements
             op.open();
             op.removeNote(delNote);
             op.close();
-            achievement.deleteNote();
+            //achievement.deleteNote();
         }else if (returnMode == 11){  //编辑备忘录
             String title = data.getExtras().getString("title", null);
             String content = data.getExtras().getString("content", null);
@@ -341,11 +362,11 @@ public class MainActivity extends BaseActivity implements
             String s = "no tag_life_study_work_play";
             editor.putString("tagListString", s);
             editor.apply();
-        }
+        }/*
         if(!sharedPreferences.contains("content_switch")) {
             editor.putBoolean("content_switch", false);
             editor.apply();
-        }
+        }*/
 
         if(!sharedPreferences.contains("fabPlanColor")){
             editor.putInt("fabPlanColor", -500041);
@@ -539,7 +560,7 @@ public class MainActivity extends BaseActivity implements
         else sortPlans(planList, 1);
         op1.close();
         planAdapter.notifyDataSetChanged();
-        achievement.listen();
+        //achievement.listen();
     }
 
     //设置很多提醒
@@ -580,12 +601,13 @@ public class MainActivity extends BaseActivity implements
         super.onResume();
         Intent intent = getIntent();
         if(intent!=null && intent.getIntExtra("mode", 0) == 1){
-            content_switch.setChecked(true);
+            //content_switch.setChecked(true);
             refreshLvVisibility();
         }
     }
 
     //成就系统
+    /*
     public class Achievement {
         private SharedPreferences sharedPreferences;
         private int noteNumber;
@@ -701,7 +723,7 @@ public class MainActivity extends BaseActivity implements
             }
         }
 
-        //字数成就
+        //TODO 字数成就
         public void wordNumberAchievement(int num) {
             if (num > 20000 && wordLevel == 4) announcement("Final Achievement! 恭喜你!", 2, 20000);
             else if (num > 5000 && wordLevel == 3)
@@ -764,7 +786,7 @@ public class MainActivity extends BaseActivity implements
             noteNumberAchievement(noteNumber);
             wordNumberAchievement(wordNumber);
         }
-    }
+    }*/
 
     //主界面跳转编辑界面
     @Override
