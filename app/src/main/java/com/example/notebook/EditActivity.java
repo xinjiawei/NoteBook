@@ -53,6 +53,7 @@ public class EditActivity extends BaseActivity {
         setContentView(R.layout.activity_edit);
 
         //跳转到手写页面
+        /*
         Button handBtn = findViewById(R.id.edit_btn1);
         handBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +87,8 @@ public class EditActivity extends BaseActivity {
             }
 
         });
+
+         */
 
         toast1=Toast.makeText(getApplicationContext(), "您已进入阅读模式", Toast.LENGTH_SHORT);
         toast2=Toast.makeText(getApplicationContext(), "您已进入编辑模式", Toast.LENGTH_SHORT);
@@ -151,13 +154,17 @@ public class EditActivity extends BaseActivity {
     }
 
     //菜单
+    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.edit_menu,menu);  //渲染edit_menu
         return super.onCreateOptionsMenu(menu);
     }
 
+     */
+
     //完成删除功能、换肤功能
+    /*
     @SuppressLint("ResourceAsColor")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -306,6 +313,7 @@ public class EditActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    */
 
     public void autoSetMessage() {
         if (openMode == 4) {
