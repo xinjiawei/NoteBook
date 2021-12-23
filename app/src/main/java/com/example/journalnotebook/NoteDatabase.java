@@ -1,4 +1,4 @@
-package com.example.notebook;
+package com.example.journalnotebook;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

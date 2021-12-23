@@ -1,4 +1,4 @@
-package com.example.notebook.Alarm;
+package com.example.journalnotebook.Alarm;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -9,7 +9,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.example.notebook.R;
+import com.example.journalnotebook.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ public class PlanAdapter extends BaseAdapter implements Filterable {
 
     private List<Plan> backList;//用来备份原始数据
     private List<Plan> planList;//这个数据是会改变的，所以要有个变量来备份一下原始数据
-    com.example.notebook.Alarm.PlanAdapter.MyFilter mFilter;
+    com.example.journalnotebook.Alarm.PlanAdapter.MyFilter mFilter;
 
     public PlanAdapter(Context mContext, List<Plan> planList) {
         this.mContext = mContext;
@@ -64,7 +64,7 @@ public class PlanAdapter extends BaseAdapter implements Filterable {
     @Override
     public Filter getFilter() {
         if (mFilter ==null){
-            mFilter = new com.example.notebook.Alarm.PlanAdapter.MyFilter();
+            mFilter = new com.example.journalnotebook.Alarm.PlanAdapter.MyFilter();
         }
         return mFilter;
     }

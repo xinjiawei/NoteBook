@@ -1,4 +1,4 @@
-package com.example.notebook.HandWriting;
+package com.example.journalnotebook.HandWriting;
 
 import android.content.Context;
 import android.graphics.Canvas;

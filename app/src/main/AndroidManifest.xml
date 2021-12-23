@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.notebook">
+    package="com.example.journalnotebook">
 
     <application
         android:allowBackup="true"
@@ -10,19 +10,19 @@
         android:roundIcon="@mipmap/main1"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".HandWriting.HandwritingActivity"></activity>
+        <activity android:name="com.example.journalnotebook.HandWriting.HandwritingActivity"></activity>
 
         <service
-            android:name=".MyIntentService"
+            android:name="com.example.journalnotebook.MyIntentService"
             android:exported="false" />
 
-        <activity android:name=".EditActivity" />
-        <activity android:name=".Alarm.EditAlarmActivity" />
-        <activity android:name=".Alarm.AlarmActivity" />
+        <activity android:name="com.example.journalnotebook.EditActivity" />
+        <activity android:name="com.example.journalnotebook.Alarm.EditAlarmActivity" />
+        <activity android:name="com.example.journalnotebook.Alarm.AlarmActivity" />
 
-        <receiver android:name=".Alarm.AlarmReceiver" />
+        <receiver android:name="com.example.journalnotebook.Alarm.AlarmReceiver" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name="com.example.journalnotebook.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

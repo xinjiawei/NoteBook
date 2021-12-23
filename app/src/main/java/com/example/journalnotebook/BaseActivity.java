@@ -1,4 +1,4 @@
-package com.example.notebook;
+package com.example.journalnotebook;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;

@@ -1,4 +1,4 @@
-package com.example.notebook.HandWriting;
+package com.example.journalnotebook.HandWriting;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,7 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.notebook.R;
+import com.example.journalnotebook.R;
 
 import java.io.File;
 import java.io.FileOutputStream;

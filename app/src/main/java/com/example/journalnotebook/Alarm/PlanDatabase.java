@@ -1,4 +1,4 @@
-package com.example.notebook.Alarm;
+package com.example.journalnotebook.Alarm;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

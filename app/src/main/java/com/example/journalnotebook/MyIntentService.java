@@ -1,4 +1,4 @@
-package com.example.notebook;
+package com.example.journalnotebook;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -14,20 +14,20 @@ import android.media.MediaPlayer;
 public class MyIntentService extends IntentService {
     // TODO: Rename actions, choose action names that describe tasks that this
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
-    public static final String ACTION_FOO = "com.example.notebook.action.FOO";
-    public static final String ACTION_BAZ = "com.example.notebook.action.BAZ";
+    public static final String ACTION_FOO = "com.example.journalnotebook.action.FOO";
+    public static final String ACTION_BAZ = "com.example.journalnotebook.action.BAZ";
 
     // action声明 这里有五个背景音乐
-    public static final String ACTION_MUSIC_1 = "com.example.notebook.action.music1";
-    public static final String ACTION_MUSIC_2 = "com.example.notebook.action.music2";
-    public static final String ACTION_MUSIC_3 = "com.example.notebook.action.music3";
-    public static final String ACTION_MUSIC_4 = "com.example.notebook.action.music4";
-    public static final String ACTION_MUSIC_5 = "com.example.notebook.action.music5";
-    public static final String ACTION_MUSIC_6 = "com.example.notebook.action.music6";
+    public static final String ACTION_MUSIC_1 = "com.example.journalnotebook.action.music1";
+    public static final String ACTION_MUSIC_2 = "com.example.journalnotebook.action.music2";
+    public static final String ACTION_MUSIC_3 = "com.example.journalnotebook.action.music3";
+    public static final String ACTION_MUSIC_4 = "com.example.journalnotebook.action.music4";
+    public static final String ACTION_MUSIC_5 = "com.example.journalnotebook.action.music5";
+    public static final String ACTION_MUSIC_6 = "com.example.journalnotebook.action.music6";
 
     // TODO: Rename parameters
-    public static final String EXTRA_PARAM1 = "com.example.notebook.extra.PARAM1";
-    public static final String EXTRA_PARAM2 = "com.example.notebook.extra.PARAM2";
+    public static final String EXTRA_PARAM1 = "com.example.journalnotebook.extra.PARAM1";
+    public static final String EXTRA_PARAM2 = "com.example.journalnotebook.extra.PARAM2";
 
     // 声明MediaPlayer对象
     private static MediaPlayer mediaPlayer;

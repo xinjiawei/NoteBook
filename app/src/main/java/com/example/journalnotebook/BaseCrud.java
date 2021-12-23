@@ -1,4 +1,4 @@
-package com.example.notebook;
+package com.example.journalnotebook;
 
 import android.content.ContentValues;
 import android.content.Context;

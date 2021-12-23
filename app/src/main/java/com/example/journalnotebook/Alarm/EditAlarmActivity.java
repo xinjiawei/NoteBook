@@ -1,4 +1,4 @@
-package com.example.notebook.Alarm;
+package com.example.journalnotebook.Alarm;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -16,8 +16,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import com.example.notebook.BaseActivity;
-import com.example.notebook.R;
+import com.example.journalnotebook.BaseActivity;
+import com.example.journalnotebook.R;
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -88,7 +88,7 @@ public class EditAlarmActivity extends BaseActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 if(!canBeSet()) {
-                    Toast.makeText(com.example.notebook.Alarm.EditAlarmActivity.this, "无效的时间", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(com.example.journalnotebook.Alarm.EditAlarmActivity.this, "无效的时间", Toast.LENGTH_SHORT).show();
                 }else if(et.getText().toString().length() + et_title.getText().toString().length() == 0 && openMode == 2){
                     Intent intent1 = new Intent();
                     intent1.putExtra("mode", -1);//nothing new happens.
@@ -97,7 +97,7 @@ public class EditAlarmActivity extends BaseActivity implements View.OnClickListe
                     overridePendingTransition(R.anim.in_lefttoright, R.anim.out_lefttoright);
                 }
                 else if (et_title.getText().toString().length() == 0) {
-                    Toast.makeText(com.example.notebook.Alarm.EditAlarmActivity.this, "标题不能为空", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(com.example.journalnotebook.Alarm.EditAlarmActivity.this, "标题不能为空", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     isTimeChange();
@@ -134,7 +134,7 @@ public class EditAlarmActivity extends BaseActivity implements View.OnClickListe
             return true;
         } else if( keyCode== KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
             if(!canBeSet()) {
-                Toast.makeText(com.example.notebook.Alarm.EditAlarmActivity.this, "Invalid Time", Toast.LENGTH_SHORT).show();
+                Toast.makeText(com.example.journalnotebook.Alarm.EditAlarmActivity.this, "Invalid Time", Toast.LENGTH_SHORT).show();
             }else if(et.getText().toString().length() + et_title.getText().toString().length() == 0 && openMode == 2){
                 Intent intent1 = new Intent();
                 intent1.putExtra("mode", -1);//nothing new happens.
@@ -143,7 +143,7 @@ public class EditAlarmActivity extends BaseActivity implements View.OnClickListe
                 overridePendingTransition(R.anim.in_lefttoright, R.anim.out_lefttoright);
             }
             else if (et_title.getText().toString().length() == 0) {
-                Toast.makeText(com.example.notebook.Alarm.EditAlarmActivity.this, "标题不能为空！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(com.example.journalnotebook.Alarm.EditAlarmActivity.this, "标题不能为空！", Toast.LENGTH_SHORT).show();
             }
             else {
                 isTimeChange();
@@ -179,7 +179,7 @@ public class EditAlarmActivity extends BaseActivity implements View.OnClickListe
         final Intent intent = new Intent();
         switch (item.getItemId()){
             case R.id.delete:
-                new AlertDialog.Builder(com.example.notebook.Alarm.EditAlarmActivity.this)
+                new AlertDialog.Builder(com.example.journalnotebook.Alarm.EditAlarmActivity.this)
                         .setMessage("确定删除这条备忘录?")
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
@@ -209,7 +209,7 @@ public class EditAlarmActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void needRefresh() {
         setTheme(R.style.AppTheme);
-        startActivity(new Intent(this, com.example.notebook.Alarm.EditAlarmActivity.class));
+        startActivity(new Intent(this, com.example.journalnotebook.Alarm.EditAlarmActivity.class));
         overridePendingTransition(R.anim.night_switch, R.anim.night_switch_over);
         finish();
     }
@@ -279,13 +279,13 @@ public class EditAlarmActivity extends BaseActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.set_date: //选择日期
-                DatePickerDialog dialog = new DatePickerDialog(com.example.notebook.Alarm.EditAlarmActivity.this,
+                DatePickerDialog dialog = new DatePickerDialog(com.example.journalnotebook.Alarm.EditAlarmActivity.this,
                         R.style.DayDialogTheme, dateSetListener,
                         dateArray[0], dateArray[1] - 1, dateArray[2]);
                 dialog.show();
                 break;
             case R.id.set_time://选择时间
-                TimePickerDialog dialog1 = new TimePickerDialog(com.example.notebook.Alarm.EditAlarmActivity.this,
+                TimePickerDialog dialog1 = new TimePickerDialog(com.example.journalnotebook.Alarm.EditAlarmActivity.this,
                         R.style.DayDialogTheme, timeSetListener,
                         timeArray[0], timeArray[1], true);
                 dialog1.show();

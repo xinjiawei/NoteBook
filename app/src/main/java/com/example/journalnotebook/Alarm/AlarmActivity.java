@@ -1,14 +1,13 @@
-package com.example.notebook.Alarm;
+package com.example.journalnotebook.Alarm;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 
-import com.example.notebook.BaseActivity;
-import com.example.notebook.R;
+import com.example.journalnotebook.BaseActivity;
+import com.example.journalnotebook.R;
 import java.util.Date;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
