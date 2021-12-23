@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/main_layout"
-    android:background="@drawable/bgd"
     tools:context=".MainActivity"
     tools:ignore="HardcodedText">
 
@@ -23,7 +22,7 @@
         android:backgroundTint="@color/button"
         app:fabSize="normal"
         app:layout_constraintBottom_toTopOf="parent"
-        app:srcCompat="@drawable/ic_create_24" />
+        app:srcCompat="@drawable/tomato" />
     <TextView
         android:id="@+id/add_note_action_text"
         android:layout_width="wrap_content"
@@ -32,7 +31,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="100dp"
         android:layout_marginBottom="30dp"
-        android:text="添加日记"
+        android:text="添加旅行日记"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/add_note_fab"
         app:layout_constraintEnd_toStartOf="@+id/add_note_fab"
@@ -55,7 +54,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="简单日记" />
+                android:text="旅行笔记  Sample" />
             <!--
             <ToggleButton
                 android:id="@+id/content_switch"
