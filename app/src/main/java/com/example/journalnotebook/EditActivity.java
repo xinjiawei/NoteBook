@@ -4,6 +4,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -14,8 +15,9 @@ import java.util.Date;
 
 public class EditActivity extends BaseActivity {
 
-    private EditText editText;
+    private EditText editText,editText2,editText3,editText4;
     private String old_content = "";
+
     private String old_time = "";
     private int old_Tag = 1;
     private long id = 0;
@@ -40,11 +42,12 @@ public class EditActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
-
-
         editText = findViewById(R.id.et);
-        myToolbar=findViewById(R.id.myToolbar);
+        editText2 = findViewById(R.id.et2);
+        editText3 = findViewById(R.id.et3);
+        editText4 = findViewById(R.id.et4);
 
+        myToolbar=findViewById(R.id.myToolbar);
 
         //编辑界面的头部
         setSupportActionBar(myToolbar);
@@ -68,12 +71,30 @@ public class EditActivity extends BaseActivity {
         if (openMode == 3) {//打开已存在的note
             id = getIntent.getLongExtra("id", 0);
             old_content = getIntent.getStringExtra("content");
+
+            String old_endpoint = getIntent.getStringExtra("endpoint");
+            //Log.e("1202",old_endpoint);
+            String old_price = getIntent.getStringExtra("price");
+            String old_text = getIntent.getStringExtra("text");
+            long old_fileid = getIntent.getLongExtra("fileid", 1);
+            String old_filetag = getIntent.getStringExtra("filetag");
+
             old_time = getIntent.getStringExtra("time");
             old_Tag = getIntent.getIntExtra("tag", 1);
             editText.setText(old_content);
-            editText.setSelection(old_content.length());
-        }
 
+            editText2.setText(old_endpoint);
+            editText3.setText(old_price);
+            editText4.setText(old_text);
+
+            editText.setSelection(old_content.length());
+            /*
+            editText2.setSelection(old_endpoint.length());
+            editText3.setSelection(old_price.length());
+            editText4.setSelection(old_text.length());
+
+             */
+        }
         //获取保存的背景色
         getWindow().setBackgroundDrawableResource(curColor[MainActivity.curId]);
     }
@@ -109,6 +130,14 @@ public class EditActivity extends BaseActivity {
             } else {
                 intent.putExtra("mode", 0); // 有一个新的
                 intent.putExtra("content", editText.getText().toString());
+
+                intent.putExtra("endpoint", editText2.getText().toString());
+                intent.putExtra("price", editText3.getText().toString());
+                intent.putExtra("text", editText4.getText().toString());
+                //TODO
+                intent.putExtra("fileid", 1);
+                intent.putExtra("filetag", "00");
+
                 intent.putExtra("time", dateToStr());
                 intent.putExtra("tag", tag);
             }
@@ -118,6 +147,14 @@ public class EditActivity extends BaseActivity {
             else {
                 intent.putExtra("mode", 1); //有修改
                 intent.putExtra("content", editText.getText().toString());
+
+                intent.putExtra("endpoint", editText2.getText().toString());
+                intent.putExtra("price", editText3.getText().toString());
+                intent.putExtra("text", editText4.getText().toString());
+                //TODO
+                intent.putExtra("fileid", 1);
+                intent.putExtra("filetag", "00");
+
                 intent.putExtra("time", dateToStr());
                 intent.putExtra("id", id);
                 intent.putExtra("tag", tag);

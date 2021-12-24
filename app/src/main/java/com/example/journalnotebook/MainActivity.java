@@ -57,7 +57,7 @@ public class MainActivity extends BaseActivity implements
     private SharedPreferences sharedPreferences;
     //private ToggleButton content_switch;
 
-    private AlarmManager alarmManager;
+    //private AlarmManager alarmManager;
     //private Achievement achievement;
     private ListView lv_plan;
     private LinearLayout lv_layout;
@@ -73,7 +73,7 @@ public class MainActivity extends BaseActivity implements
         getWindow().setStatusBarColor(getResources().getColor(R.color.greyMain));
         setContentView(R.layout.activity_main);
         //实例化闹钟管理器
-        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        //alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         //achievement = new Achievement(context);
         initView();
 
@@ -149,7 +149,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void refreshLvVisibility() {
-        //决定应该显示notes还是plans
+        //显示notes
         lv_layout.setVisibility(View.VISIBLE);
         lv_plan_layout.setVisibility(GONE);
 
@@ -166,9 +166,16 @@ public class MainActivity extends BaseActivity implements
 
         if (returnMode == 1) {  //更新当前笔记内容
             String content = data.getExtras().getString("content");
+
+            String endpoint = data.getExtras().getString("endpoint");
+            String price = data.getExtras().getString("price");
+            String text = data.getExtras().getString("text");
+            int fileid = data.getExtras().getInt("fileid");
+            String filetag = data.getExtras().getString("filetag");
+
             String time = data.getExtras().getString("time");
             int tag = data.getExtras().getInt("tag", 1);
-            Note newNote = new Note(content, time, tag);
+            Note newNote = new Note(content,endpoint,price,text,fileid,filetag,time, tag);
             newNote.setId(note_Id);
             BaseCrud op = new BaseCrud(context);
             op.open();
@@ -177,15 +184,24 @@ public class MainActivity extends BaseActivity implements
             op.close();
         }else if (returnMode == 0) {  // 创建新笔记
             String content = data.getExtras().getString("content");
+
+
+            String endpoint = data.getExtras().getString("endpoint");
+            String price = data.getExtras().getString("price");
+            String text = data.getExtras().getString("text");
+            int fileid = data.getExtras().getInt("fileid");
+            String filetag = data.getExtras().getString("filetag");
+
             String time = data.getExtras().getString("time");
             int tag = data.getExtras().getInt("tag", 1);
-            Note newNote = new Note(content, time, tag);
+            Note newNote = new Note(content,endpoint,price,text,fileid,filetag,time, tag);
             BaseCrud op = new BaseCrud(context);
             op.open();
             op.addNote(newNote);
             op.close();
             //achievement.addNote(content);
-        }else if(returnMode==2){ //删除已经创建好的笔记内容
+        }
+        /*else if(returnMode==2){ // 删除已经创建好的笔记内容
             Note delNote=new Note();
             delNote.setId(note_Id);
             BaseCrud op = new BaseCrud(context);
@@ -193,21 +209,9 @@ public class MainActivity extends BaseActivity implements
             op.removeNote(delNote);
             op.close();
             //achievement.deleteNote();
-        }else if (returnMode == 11){  //编辑备忘录
-            String title = data.getExtras().getString("title", null);
-            String content = data.getExtras().getString("content", null);
-            String time = data.getExtras().getString("time", null);
-            Log.d(TAG, time);
-
-
-        }else if (returnMode == 12){  //删除存在的备忘录
-
-        }else if (returnMode == 10){  //创建新的备忘录
-            String title = data.getExtras().getString("title", null);
-            String content = data.getExtras().getString("content", null);
-            String time = data.getExtras().getString("time", null);
-
         }
+
+         */
         refreshListView();
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -259,13 +263,6 @@ public class MainActivity extends BaseActivity implements
         //
     }
 
-    //
-
-
-
-
-
-
     @Override
     public void onResume(){
         super.onResume();
@@ -284,10 +281,20 @@ public class MainActivity extends BaseActivity implements
                 Note curNote = (Note) parent.getItemAtPosition(position);
                 Intent intent = new Intent(MainActivity.this, EditActivity.class);
                 intent.putExtra("content", curNote.getContent());
+
+                intent.putExtra("endpoint", curNote.getEndpoint());
+                intent.putExtra("price", curNote.getPrice());
+                intent.putExtra("text", curNote.getText());
+                intent.putExtra("fileid", curNote.getFileid());
+                intent.putExtra("filetag", curNote.getFiletag());
+
                 intent.putExtra("id", curNote.getId());
                 intent.putExtra("time", curNote.getTime());
                 intent.putExtra("mode", 3);
                 intent.putExtra("tag", curNote.getTag());
+                Log.e("1201"," /curNote.getContent() :" + curNote.getContent()+ " /curNote.getId():" +
+                        curNote.getId() + " /curNote.getTime(): +" + curNote.getTime() + " /curNote.getTag(): " +
+                        curNote.getTag());
                 startActivityForResult(intent, 1);
                 break;
             case R.id.lv_plan:
@@ -298,12 +305,10 @@ public class MainActivity extends BaseActivity implements
     //长按删除日记
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        switch (parent.getId()) {
-            case R.id.lv:
                 final Note note = noteList.get(position);
                 new AlertDialog.Builder(MainActivity.this)
                         .setTitle("确定")
-                        .setMessage("确定要删除此条日记吗?")
+                        .setMessage("确定要删除此条日记吗hh?")
                         .setIcon(R.drawable.ic_baseline_keyboard_voice_24)
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
@@ -320,25 +325,6 @@ public class MainActivity extends BaseActivity implements
                         dialog.dismiss();
                     }
                 }).create().show();
-                break;
-            case R.id.lv_plan:
-
-                new AlertDialog.Builder(MainActivity.this)
-                        .setMessage("确定要删除此条备忘录吗?")
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                                refreshListView();
-                            }
-                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).create().show();
-                break;
-        }
         return true;
     }
 

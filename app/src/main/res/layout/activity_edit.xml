@@ -67,7 +67,15 @@
             android:gravity="top">
         </EditText>
     </LinearLayout>
-
+    <EditText
+        android:id="@+id/et4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:hint="my text"
+        android:textColorHint="@color/greyC"
+        android:gravity="top">
+    </EditText>
 
 
 

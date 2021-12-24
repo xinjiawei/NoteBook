@@ -16,6 +16,13 @@ public class BaseCrud {
     private static final String[] columns = {
             NoteDatabase.ID,
             NoteDatabase.CONTENT,
+
+            NoteDatabase.ENDPOINT,
+            NoteDatabase.PRICE,
+            NoteDatabase.TEXT,
+            NoteDatabase.FILEID,
+            NoteDatabase.FILETAG,
+
             NoteDatabase.TIME,
             NoteDatabase.MODE
     };
@@ -36,6 +43,13 @@ public class BaseCrud {
     public Note addNote(Note note){
         ContentValues contentValues = new ContentValues();
         contentValues.put(NoteDatabase.CONTENT, note.getContent());
+
+        contentValues.put(NoteDatabase.ENDPOINT, note.getEndpoint());
+        contentValues.put(NoteDatabase.PRICE, note.getPrice());
+        contentValues.put(NoteDatabase.TEXT, note.getText());
+        contentValues.put(NoteDatabase.FILEID, note.getFileid());
+        contentValues.put(NoteDatabase.FILETAG, note.getFiletag());
+
         contentValues.put(NoteDatabase.TIME, note.getTime());
         contentValues.put(NoteDatabase.MODE, note.getTag());
         long insertId = db.insert(NoteDatabase.TABLE_NAME, null, contentValues);
@@ -47,7 +61,8 @@ public class BaseCrud {
         Cursor cursor = db.query(NoteDatabase.TABLE_NAME,columns,NoteDatabase.ID + "=?",
                 new String[]{String.valueOf(id)},null,null, null, null);
         if (cursor != null) cursor.moveToFirst();
-        Note e = new Note(cursor.getString(1),cursor.getString(2), cursor.getInt(3));
+        Note e = new Note(cursor.getString(1),cursor.getString(2), cursor.getString(3),cursor.getString(4),
+                cursor.getInt(5),cursor.getString(6),cursor.getString(7),cursor.getInt(8));
         return e;
     }
 
@@ -61,6 +76,13 @@ public class BaseCrud {
                 Note note = new Note();
                 note.setId(cursor.getLong(cursor.getColumnIndex(NoteDatabase.ID)));
                 note.setContent(cursor.getString(cursor.getColumnIndex(NoteDatabase.CONTENT)));
+
+                note.setEndpoint(cursor.getString(cursor.getColumnIndex(NoteDatabase.ENDPOINT)));
+                note.setPrice(cursor.getString(cursor.getColumnIndex(NoteDatabase.PRICE)));
+                note.setText(cursor.getString(cursor.getColumnIndex(NoteDatabase.TEXT)));
+                note.setFileid(cursor.getInt(cursor.getColumnIndex(NoteDatabase.FILEID)));
+                note.setFiletag(cursor.getString(cursor.getColumnIndex(NoteDatabase.FILETAG)));
+
                 note.setTime(cursor.getString(cursor.getColumnIndex(NoteDatabase.TIME)));
                 note.setTag(cursor.getInt(cursor.getColumnIndex(NoteDatabase.MODE)));
                 notes.add(note);
@@ -71,6 +93,13 @@ public class BaseCrud {
     public int updateNote(Note note) {
         ContentValues values = new ContentValues();
         values.put(NoteDatabase.CONTENT, note.getContent());
+
+        values.put(NoteDatabase.ENDPOINT, note.getEndpoint());
+        values.put(NoteDatabase.PRICE, note.getPrice());
+        values.put(NoteDatabase.TEXT, note.getText());
+        values.put(NoteDatabase.FILEID, note.getFileid());
+        values.put(NoteDatabase.FILETAG, note.getFiletag());
+
         values.put(NoteDatabase.TIME, note.getTime());
         values.put(NoteDatabase.MODE, note.getTag());
         return db.update(NoteDatabase.TABLE_NAME, values,
