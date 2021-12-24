@@ -22,11 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.journalnotebook.Alarm.AlarmReceiver;
-import com.example.journalnotebook.Alarm.EditAlarmActivity;
-import com.example.journalnotebook.Alarm.Plan;
-import com.example.journalnotebook.Alarm.PlanAdapter;
-import com.example.journalnotebook.Alarm.PlanDatabase;
+
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -45,14 +41,13 @@ public class MainActivity extends BaseActivity implements
         AdapterView.OnItemLongClickListener {
 
     private NoteDatabase dbHelper;
-    private PlanDatabase planDbHelper;
+
     private Toolbar myToolbar;
     TextView textView;
     private ListView lv;
     private Context context = this;
     private NoteAdapter adapter;
     private List<Note> noteList = new ArrayList<Note>();
-    private List<Plan> planList = new ArrayList<Plan>();
     //fab
     private FloatingActionButton mAddMemoFab, mAddNoteFab;
     private ExtendedFloatingActionButton mAddFab;
@@ -67,7 +62,6 @@ public class MainActivity extends BaseActivity implements
     private ListView lv_plan;
     private LinearLayout lv_layout;
     private LinearLayout lv_plan_layout;
-    private PlanAdapter planAdapter;
 
     public static int curId = 5;
 
@@ -106,10 +100,8 @@ public class MainActivity extends BaseActivity implements
         lv_plan_layout = findViewById(R.id.lv_plan_layout);
         refreshLvVisibility();
         adapter = new NoteAdapter(getApplicationContext(), noteList);
-        planAdapter = new PlanAdapter(getApplicationContext(), planList);
         refreshListView();
         lv.setAdapter(adapter);
-        lv_plan.setAdapter(planAdapter);
 
         //自定义状态栏
         setSupportActionBar(myToolbar);
@@ -206,29 +198,15 @@ public class MainActivity extends BaseActivity implements
             String content = data.getExtras().getString("content", null);
             String time = data.getExtras().getString("time", null);
             Log.d(TAG, time);
-            Plan plan = new Plan(title, content, time);
-            plan.setId(note_Id);
-            com.example.journalnotebook.Alarm.AlarmCrud op = new com.example.journalnotebook.Alarm.AlarmCrud(context);
-            op.open();
-            op.updatePlan(plan);
-            op.close();
+
+
         }else if (returnMode == 12){  //删除存在的备忘录
-            Plan plan = new Plan();
-            plan.setId(note_Id);
-            com.example.journalnotebook.Alarm.AlarmCrud op = new com.example.journalnotebook.Alarm.AlarmCrud(context);
-            op.open();
-            op.removePlan(plan);
-            op.close();
+
         }else if (returnMode == 10){  //创建新的备忘录
             String title = data.getExtras().getString("title", null);
             String content = data.getExtras().getString("content", null);
             String time = data.getExtras().getString("time", null);
-            Plan newPlan = new Plan(title, content, time);
-            com.example.journalnotebook.Alarm.AlarmCrud op = new com.example.journalnotebook.Alarm.AlarmCrud(context);
-            op.open();
-            op.addPlan(newPlan);
-            Log.d(TAG, "onActivityResult: "+ time);
-            op.close();
+
         }
         refreshListView();
         super.onActivityResult(requestCode, resultCode, data);
@@ -279,53 +257,14 @@ public class MainActivity extends BaseActivity implements
         adapter.notifyDataSetChanged();
 
         //
-        com.example.journalnotebook.Alarm.AlarmCrud op1 = new com.example.journalnotebook.Alarm.AlarmCrud(context);
-        op1.open();
-        if(planList.size() > 0) {
-            cancelAlarms(planList);//
-            planList.clear();
-        }
-        planList.addAll(op1.getAllPlans());
-        startAlarms(planList);//
-        if (sharedPreferences.getBoolean("reverseSort", false)) sortPlans(planList, 2);
-        else sortPlans(planList, 1);
-        op1.close();
-        planAdapter.notifyDataSetChanged();
-        //achievement.listen();
     }
 
     //
-    private void startAlarms(List<Plan> plans){
-        for(int i = 0; i < plans.size(); i++) {
-            startAlarm(plans.get(i));
-        }
-    }
 
-    //
-    private void startAlarm(Plan p) {
-        Calendar c = p.getPlanTime();
-        if(!c.before(Calendar.getInstance())) {
-            Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
-            intent.putExtra("title", p.getTitle());
-            intent.putExtra("content", p.getContent());
-            intent.putExtra("id", (int)p.getId());
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, (int) p.getId(), intent, 0);
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
-        }
-    }
 
-    //
-    private void cancelAlarm(Plan p) {
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, (int)p.getId(), intent, 0);
-        alarmManager.cancel(pendingIntent);
-    }
 
-    //
-    private void cancelAlarms(List<Plan> plans){
-        for(int i = 0; i < plans.size(); i++)
-            cancelAlarm(plans.get(i));
-    }
+
+
 
     @Override
     public void onResume(){
@@ -352,14 +291,6 @@ public class MainActivity extends BaseActivity implements
                 startActivityForResult(intent, 1);
                 break;
             case R.id.lv_plan:
-                Plan curPlan = (Plan) parent.getItemAtPosition(position);
-                Intent intent1 = new Intent(MainActivity.this, EditAlarmActivity.class);
-                intent1.putExtra("title", curPlan.getTitle());
-                intent1.putExtra("content", curPlan.getContent());
-                intent1.putExtra("time", curPlan.getTime());
-                intent1.putExtra("mode", 1);
-                intent1.putExtra("id", curPlan.getId());
-                startActivityForResult(intent1, 1);
                 break;
         }
     }
@@ -391,16 +322,13 @@ public class MainActivity extends BaseActivity implements
                 }).create().show();
                 break;
             case R.id.lv_plan:
-                final Plan plan = planList.get(position);
+
                 new AlertDialog.Builder(MainActivity.this)
                         .setMessage("确定要删除此条备忘录吗?")
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                com.example.journalnotebook.Alarm.AlarmCrud op = new com.example.journalnotebook.Alarm.AlarmCrud(context);
-                                op.open();
-                                op.removePlan(plan);
-                                op.close();
+
                                 refreshListView();
                             }
                         }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -450,23 +378,7 @@ public class MainActivity extends BaseActivity implements
         });
     }
 
-    //按备忘录时间排序
-    public void sortPlans(List<Plan> planList, final int mode){
-        Collections.sort(planList, new Comparator<Plan>() {
-            @Override
-            public int compare(Plan o1, Plan o2) {
-                try {
-                    if (mode == 1)
-                        return ChangeLong(calStrToSec(o1.getTime()) - calStrToSec(o2.getTime()));
-                    else if (mode == 2) //reverseSort
-                        return ChangeLong(calStrToSec(o2.getTime()) - calStrToSec(o1.getTime()));
-                } catch (java.text.ParseException e) {
-                    e.printStackTrace();
-                }
-                return 1;
-            }
-        });
-    }
+
     public long calStrToSec(String date) throws java.text.ParseException {
         java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
         long secTime = Objects.requireNonNull(format.parse(date)).getTime();
