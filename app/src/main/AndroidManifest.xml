@@ -10,7 +10,6 @@
         android:roundIcon="@mipmap/main1"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.journalnotebook.HandWriting.HandwritingActivity"></activity>
 
         <service
             android:name="com.example.journalnotebook.MyIntentService"
@@ -19,10 +18,12 @@
         <activity android:name="com.example.journalnotebook.EditActivity" />
         <activity android:name="com.example.journalnotebook.Alarm.EditAlarmActivity" />
         <activity android:name="com.example.journalnotebook.Alarm.AlarmActivity" />
+        <activity android:name="com.example.journalnotebook.MainActivity" />
 
         <receiver android:name="com.example.journalnotebook.Alarm.AlarmReceiver" />
 
-        <activity android:name="com.example.journalnotebook.MainActivity">
+
+        <activity android:name="com.example.journalnotebook.Initialpage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
