@@ -2,21 +2,40 @@ package com.example.journalnotebook;
 
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
-public class EditActivity extends BaseActivity {
+public class EditActivity extends BaseActivity implements View.OnClickListener {
 
     private EditText editText,editText2,editText3,editText4;
     private String old_content = "";
+    private String old_endpoint = "";
+    private String old_price = "";
+    private String old_text = "";
+
+    private DatePickerDialog.OnDateSetListener dateSetListener;
+    private TimePickerDialog.OnTimeSetListener timeSetListener;
+    private Button set_date;
+    private Button set_time;
+    private TextView date;
+    private TextView time;
+    private int[] dateArray = new int[3];
+    private int[] timeArray = new int[2];
 
     private String old_time = "";
     private int old_Tag = 1;
@@ -47,6 +66,11 @@ public class EditActivity extends BaseActivity {
         editText3 = findViewById(R.id.et3);
         editText4 = findViewById(R.id.et4);
 
+        set_date = findViewById(R.id.set_date);
+        set_time = findViewById(R.id.set_time);
+        date = findViewById(R.id.date);
+        time = findViewById(R.id.time);
+
         myToolbar=findViewById(R.id.myToolbar);
 
         //编辑界面的头部
@@ -71,15 +95,25 @@ public class EditActivity extends BaseActivity {
         if (openMode == 3) {//打开已存在的note
             id = getIntent.getLongExtra("id", 0);
             old_content = getIntent.getStringExtra("content");
-
-            String old_endpoint = getIntent.getStringExtra("endpoint");
+             old_endpoint = getIntent.getStringExtra("endpoint");
             //Log.e("1202",old_endpoint);
-            String old_price = getIntent.getStringExtra("price");
-            String old_text = getIntent.getStringExtra("text");
+             old_price = getIntent.getStringExtra("price");
+             old_text = getIntent.getStringExtra("text");
             long old_fileid = getIntent.getLongExtra("fileid", 1);
             String old_filetag = getIntent.getStringExtra("filetag");
 
             old_time = getIntent.getStringExtra("time");
+            Log.e("1202",old_time);
+            String[] wholeTime = old_time.split(" ");
+            String[] temp = wholeTime[0].split("-");
+            String[] temp1 = wholeTime[1].split(":");
+            Log.e("1202-1",temp[0] + "," + temp[1] + "," + temp[2] + ",");
+            setDateTV(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]), Integer.parseInt(temp[2]));
+            setTimeTV(Integer.parseInt(temp1[0]), Integer.parseInt(temp1[1]));
+
+
+            //setTimeTV(12,52);
+
             old_Tag = getIntent.getIntExtra("tag", 1);
             editText.setText(old_content);
 
@@ -131,6 +165,15 @@ public class EditActivity extends BaseActivity {
                 intent.putExtra("mode", 0); // 有一个新的
                 intent.putExtra("content", editText.getText().toString());
 
+                old_time = dateToStr();
+                Log.e("1202",old_time);
+                String[] wholeTime = old_time.split(" ");
+                String[] temp = wholeTime[0].split("-");
+                String[] temp1 = wholeTime[1].split(":");
+                Log.e("1202-1",temp[0] + "," + temp[1] + "," + temp[2] + ",");
+                setDateTV(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]), Integer.parseInt(temp[2]));
+                setTimeTV(Integer.parseInt(temp1[0]), Integer.parseInt(temp1[1]));
+
                 intent.putExtra("endpoint", editText2.getText().toString());
                 intent.putExtra("price", editText3.getText().toString());
                 intent.putExtra("text", editText4.getText().toString());
@@ -141,12 +184,25 @@ public class EditActivity extends BaseActivity {
                 intent.putExtra("time", dateToStr());
                 intent.putExtra("tag", tag);
             }
-        } else {
-            if (editText.getText().toString().equals(old_content) && !tagChange)
+        }
+        else {
+            if (editText.getText().toString().equals(old_content) &&
+                    editText2.getText().toString().equals(old_endpoint) &&
+                    editText3.getText().toString().equals(old_price) &&
+                    editText4.getText().toString().equals(old_text) && !tagChange)
                 intent.putExtra("mode", -1); // 没有修改
             else {
                 intent.putExtra("mode", 1); //有修改
                 intent.putExtra("content", editText.getText().toString());
+
+                old_time = dateToStr();
+                Log.e("1202",old_time);
+                String[] wholeTime = old_time.split(" ");
+                String[] temp = wholeTime[0].split("-");
+                String[] temp1 = wholeTime[1].split(":");
+                Log.e("1202-1",temp[0] + "," + temp[1] + "," + temp[2] + ",");
+                setDateTV(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]), Integer.parseInt(temp[2]));
+                setTimeTV(Integer.parseInt(temp1[0]), Integer.parseInt(temp1[1]));
 
                 intent.putExtra("endpoint", editText2.getText().toString());
                 intent.putExtra("price", editText3.getText().toString());
@@ -160,11 +216,90 @@ public class EditActivity extends BaseActivity {
                 intent.putExtra("tag", tag);
             }
         }
+
     }
     //时间戳
     public String dateToStr () {
         Date date = new Date();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return simpleDateFormat.format(date);
     }
+
+    private void init(){
+
+
+        set_date.setOnClickListener(this);
+        set_time.setOnClickListener(this);
+
+        dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                setDateTV(year, month+1, dayOfMonth);
+
+            }
+        };
+        timeSetListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                setTimeTV(hourOfDay, minute);
+            }
+        };
+    }
+
+
+    private void setDateTV(int y, int m, int d){
+        //更新tv和dateArray
+        String temp = y + "-";
+        if(m<10) temp += "0";
+        temp += (m + "-");
+        if(d<10) temp +="0";
+        temp += d;
+        date.setText(temp);
+        dateArray[0] = y;
+        dateArray[1] = m;
+        dateArray[2] = d;
+    }
+
+    private void setTimeTV(int h, int m){
+        String temp = "";
+        if(h<10) temp += "0";
+        temp += (h + ":");
+        if(m<10) temp += "0";
+        temp += m;
+        time.setText(temp);
+        timeArray[0] = h;
+        timeArray[1] = m;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.set_date: //选择日期
+                DatePickerDialog dialog = new DatePickerDialog(com.example.journalnotebook.EditActivity.this,
+                        R.style.DayDialogTheme, dateSetListener,
+                        dateArray[0], dateArray[1] - 1, dateArray[2]);
+                dialog.show();
+                break;
+            case R.id.set_time://选择时间
+                TimePickerDialog dialog1 = new TimePickerDialog(com.example.journalnotebook.EditActivity.this,
+                        R.style.DayDialogTheme, timeSetListener,
+                        timeArray[0], timeArray[1], true);
+                dialog1.show();
+                break;
+        }
+    }
+
+    private boolean canBeSet(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(dateArray[0], dateArray[1] - 1, dateArray[2], timeArray[0], timeArray[1]);
+        Calendar cur = Calendar.getInstance();
+        Log.d(TAG, "canBeSet: " + cur.getTime().toString() + calendar.getTime().toString());
+        if(cur.before(calendar)) return true;
+        else {
+            Toast.makeText(this, "请设置正确的时间", Toast.LENGTH_SHORT).show();
+            //return false;
+            return true;
+        }
+    }
+
 }

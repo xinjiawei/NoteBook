@@ -175,6 +175,8 @@ public class MainActivity extends BaseActivity implements
 
             String time = data.getExtras().getString("time");
             int tag = data.getExtras().getInt("tag", 1);
+            Log.e("1203-1", content + "," + endpoint + "," + price + ","+ text);
+
             Note newNote = new Note(content,endpoint,price,text,fileid,filetag,time, tag);
             newNote.setId(note_Id);
             BaseCrud op = new BaseCrud(context);
@@ -185,7 +187,6 @@ public class MainActivity extends BaseActivity implements
         }else if (returnMode == 0) {  // 创建新笔记
             String content = data.getExtras().getString("content");
 
-
             String endpoint = data.getExtras().getString("endpoint");
             String price = data.getExtras().getString("price");
             String text = data.getExtras().getString("text");
@@ -194,6 +195,8 @@ public class MainActivity extends BaseActivity implements
 
             String time = data.getExtras().getString("time");
             int tag = data.getExtras().getInt("tag", 1);
+            Log.e("1203-2", content + "," + endpoint + "," + price + ","+ text);
+
             Note newNote = new Note(content,endpoint,price,text,fileid,filetag,time, tag);
             BaseCrud op = new BaseCrud(context);
             op.open();

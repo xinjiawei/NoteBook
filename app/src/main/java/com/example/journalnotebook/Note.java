@@ -1,5 +1,7 @@
 package com.example.journalnotebook;
 
+import java.util.Calendar;
+
 public class Note {
     private long id;
     private String content;
@@ -10,6 +12,7 @@ public class Note {
     private String filetag;
     private String time;
     private int tag;
+    private Calendar planTime;
 
     public Note() {
     }
@@ -85,7 +88,6 @@ public class Note {
     public int getTag() {
         return tag;
     }
-
     public void setTag(int tag) {
         this.tag = tag;
     }
@@ -93,5 +95,26 @@ public class Note {
     @Override
     public String toString() {
         return content + "\n" + time.substring(5,16) + " "+ id;
+    }
+/*
+    public Note(){
+        this.planTime = Calendar.getInstance();
+    }
+
+ */
+    public int getYear(){
+        return planTime.get(Calendar.YEAR);
+    }
+    public int getMonth(){
+        return planTime.get(Calendar.MONTH);
+    }
+    public int getDay() {
+        return planTime.get(Calendar.DAY_OF_MONTH);
+    }
+    public int getHour() {
+        return planTime.get(Calendar.HOUR_OF_DAY);
+    }
+    public int getMinute() {
+        return planTime.get(Calendar.MINUTE);
     }
 }

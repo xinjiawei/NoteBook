@@ -31,6 +31,8 @@ public class BaseCrud {
         dbHandler = new NoteDatabase(context);
     }
 
+
+
     public void open(){
         db = dbHandler.getWritableDatabase();
     }
