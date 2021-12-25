@@ -96,25 +96,6 @@ public class Note {
     public String toString() {
         return content + "\n" + time.substring(5,16) + " "+ id;
     }
-/*
-    public Note(){
-        this.planTime = Calendar.getInstance();
-    }
 
- */
-    public int getYear(){
-        return planTime.get(Calendar.YEAR);
-    }
-    public int getMonth(){
-        return planTime.get(Calendar.MONTH);
-    }
-    public int getDay() {
-        return planTime.get(Calendar.DAY_OF_MONTH);
-    }
-    public int getHour() {
-        return planTime.get(Calendar.HOUR_OF_DAY);
-    }
-    public int getMinute() {
-        return planTime.get(Calendar.MINUTE);
-    }
+
 }

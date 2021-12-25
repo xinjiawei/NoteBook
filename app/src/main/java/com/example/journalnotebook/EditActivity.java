@@ -70,7 +70,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
         set_time = findViewById(R.id.set_time);
         date = findViewById(R.id.date);
         time = findViewById(R.id.time);
-
+        init();
         myToolbar=findViewById(R.id.myToolbar);
 
         //编辑界面的头部
@@ -128,7 +128,20 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
             editText4.setSelection(old_text.length());
 
              */
+        }else if (openMode == 4){
+            old_time = dateToStr();
+            Log.e("1207",old_time);;
+            String[] wholeTime = old_time.split(" ");
+            String[] temp = wholeTime[0].split("-");
+            String[] temp1 = wholeTime[1].split(":");
+            Log.e("1202-1",temp[0] + "," + temp[1] + "," + temp[2] + ",");
+            setDateTV(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]), Integer.parseInt(temp[2]));
+            setTimeTV(Integer.parseInt(temp1[0]), Integer.parseInt(temp1[1]));
+
         }
+
+
+
         //获取保存的背景色
         getWindow().setBackgroundDrawableResource(curColor[MainActivity.curId]);
     }
@@ -158,21 +171,14 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
 
 
     public void autoSetMessage() {
+        String dates = date.getText().toString() + " " + time.getText().toString();
         if (openMode == 4) {
             if (editText.getText().toString().length() == 0) {
                 intent.putExtra("mode", -1); //没有信息
+
             } else {
                 intent.putExtra("mode", 0); // 有一个新的
                 intent.putExtra("content", editText.getText().toString());
-
-                old_time = dateToStr();
-                Log.e("1202",old_time);
-                String[] wholeTime = old_time.split(" ");
-                String[] temp = wholeTime[0].split("-");
-                String[] temp1 = wholeTime[1].split(":");
-                Log.e("1202-1",temp[0] + "," + temp[1] + "," + temp[2] + ",");
-                setDateTV(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]), Integer.parseInt(temp[2]));
-                setTimeTV(Integer.parseInt(temp1[0]), Integer.parseInt(temp1[1]));
 
                 intent.putExtra("endpoint", editText2.getText().toString());
                 intent.putExtra("price", editText3.getText().toString());
@@ -181,7 +187,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
                 intent.putExtra("fileid", 1);
                 intent.putExtra("filetag", "00");
 
-                intent.putExtra("time", dateToStr());
+                intent.putExtra("time", date.getText().toString() + " " + time.getText().toString());
                 intent.putExtra("tag", tag);
             }
         }
@@ -189,20 +195,12 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
             if (editText.getText().toString().equals(old_content) &&
                     editText2.getText().toString().equals(old_endpoint) &&
                     editText3.getText().toString().equals(old_price) &&
-                    editText4.getText().toString().equals(old_text) && !tagChange)
+                    editText4.getText().toString().equals(old_text) &&
+                    dates.equals(old_time) && !tagChange)
                 intent.putExtra("mode", -1); // 没有修改
             else {
                 intent.putExtra("mode", 1); //有修改
                 intent.putExtra("content", editText.getText().toString());
-
-                old_time = dateToStr();
-                Log.e("1202",old_time);
-                String[] wholeTime = old_time.split(" ");
-                String[] temp = wholeTime[0].split("-");
-                String[] temp1 = wholeTime[1].split(":");
-                Log.e("1202-1",temp[0] + "," + temp[1] + "," + temp[2] + ",");
-                setDateTV(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]), Integer.parseInt(temp[2]));
-                setTimeTV(Integer.parseInt(temp1[0]), Integer.parseInt(temp1[1]));
 
                 intent.putExtra("endpoint", editText2.getText().toString());
                 intent.putExtra("price", editText3.getText().toString());
@@ -211,7 +209,9 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
                 intent.putExtra("fileid", 1);
                 intent.putExtra("filetag", "00");
 
-                intent.putExtra("time", dateToStr());
+                //TODO time THE PLUG PUT intent.putExtra("time", old_time);
+                intent.putExtra("time", date.getText().toString() + " " + time.getText().toString());
+                Log.e("1209",date.getText().toString() + " " + time.getText().toString());
                 intent.putExtra("id", id);
                 intent.putExtra("tag", tag);
             }
@@ -226,6 +226,29 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void init(){
+        Calendar ca = Calendar.getInstance();
+        int  mYear = ca.get(Calendar.YEAR);
+        int  mMonth = ca.get(Calendar.MONTH);
+        int  mDay = ca.get(Calendar.DAY_OF_MONTH);
+        int  mHour = ca.get(Calendar.HOUR_OF_DAY);
+        int  mMinute = ca.get(Calendar.MINUTE);
+
+
+        dateArray[0] = mYear;
+        dateArray[1] = mMonth;
+        dateArray[2] = mDay;
+        timeArray[0] = mHour;
+        timeArray[1] = mMinute;
+
+        set_date = findViewById(R.id.set_date);
+        set_time = findViewById(R.id.set_time);
+        date = findViewById(R.id.date);
+        time = findViewById(R.id.time);
+
+        //初始化两个textView
+        setDateTV(dateArray[0], dateArray[1], dateArray[2]);
+        setTimeTV((timeArray[1]>54? timeArray[0]+1 : timeArray[0]), (timeArray[1]+5)%60);
+        Log.d(TAG, "init: "+dateArray[1]);
 
 
         set_date.setOnClickListener(this);
@@ -234,6 +257,12 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
         dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                /*
+                mYear = year;
+                mMonth = month;
+                mDay = dayOfMonth;
+
+                 */
                 setDateTV(year, month+1, dayOfMonth);
 
             }
@@ -286,19 +315,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
                         timeArray[0], timeArray[1], true);
                 dialog1.show();
                 break;
-        }
-    }
-
-    private boolean canBeSet(){
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(dateArray[0], dateArray[1] - 1, dateArray[2], timeArray[0], timeArray[1]);
-        Calendar cur = Calendar.getInstance();
-        Log.d(TAG, "canBeSet: " + cur.getTime().toString() + calendar.getTime().toString());
-        if(cur.before(calendar)) return true;
-        else {
-            Toast.makeText(this, "请设置正确的时间", Toast.LENGTH_SHORT).show();
-            //return false;
-            return true;
         }
     }
 
