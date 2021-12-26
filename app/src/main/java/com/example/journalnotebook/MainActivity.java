@@ -40,7 +40,6 @@ public class MainActivity extends BaseActivity implements
         AdapterView.OnItemClickListener,
         AdapterView.OnItemLongClickListener {
 
-    private NoteDatabase dbHelper;
 
     private Toolbar myToolbar;
     TextView textView;
@@ -49,16 +48,12 @@ public class MainActivity extends BaseActivity implements
     private NoteAdapter adapter;
     private List<Note> noteList = new ArrayList<Note>();
     //fab
-    private FloatingActionButton mAddMemoFab, mAddNoteFab;
-    private ExtendedFloatingActionButton mAddFab;
+    private FloatingActionButton mAddNoteFab;
     TextView addNoteActionText;
     private Boolean isAllFabsVisible;
 
     private SharedPreferences sharedPreferences;
-    //private ToggleButton content_switch;
 
-    //private AlarmManager alarmManager;
-    //private Achievement achievement;
     private ListView lv_plan;
     private LinearLayout lv_layout;
     private LinearLayout lv_plan_layout;
@@ -73,6 +68,16 @@ public class MainActivity extends BaseActivity implements
         setContentView(R.layout.activity_main);
         initView();
 
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Intent intent = getIntent();
+        if(intent!=null && intent.getIntExtra("mode", 0) == 1){
+            //content_switch.setChecked(true);
+            refreshLvVisibility();
+        }
     }
 
     @Override
@@ -121,11 +126,9 @@ public class MainActivity extends BaseActivity implements
 
         isAllFabsVisible = false;
 
-        //mAddMemoFab.show();
         mAddNoteFab.show();
 
         addNoteActionText.setVisibility(View.VISIBLE);
-        //mAddFab.extend();
         isAllFabsVisible = true;
 
 
@@ -254,19 +257,7 @@ public class MainActivity extends BaseActivity implements
             op.open();
             op.addNote(newNote);
             op.close();
-            //achievement.addNote(content);
         }
-        /*else if(returnMode==2){ // 删除已经创建好的笔记内容
-            Note delNote=new Note();
-            delNote.setId(note_Id);
-            BaseCrud op = new BaseCrud(context);
-            op.open();
-            op.removeNote(delNote);
-            op.close();
-            //achievement.deleteNote();
-        }
-
-         */
         refreshListView();
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -318,18 +309,6 @@ public class MainActivity extends BaseActivity implements
         //
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        Intent intent = getIntent();
-        if(intent!=null && intent.getIntExtra("mode", 0) == 1){
-            //content_switch.setChecked(true);
-            refreshLvVisibility();
-        }
-    }
-
-
-
     //格式转换string -> milliseconds
     @RequiresApi(api = Build.VERSION_CODES.N)
     public long dateStrToSec(String date) throws ParseException, java.text.ParseException {
@@ -366,10 +345,4 @@ public class MainActivity extends BaseActivity implements
         });
     }
 
-
-    public long calStrToSec(String date) throws java.text.ParseException {
-        java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
-        long secTime = Objects.requireNonNull(format.parse(date)).getTime();
-        return secTime;
-    }
 }

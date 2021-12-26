@@ -50,7 +50,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Price"
+            android:text="旅费"
             android:textSize="20sp"
             android:textStyle="bold"
             android:gravity="center"
@@ -75,7 +75,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="top"
-        android:hint="my text"
+        android:hint="在这里记录美好吧!"
         android:textColorHint="@color/greyC"></EditText>
 
     <LinearLayout
@@ -92,7 +92,10 @@
                 android:id="@+id/take_photo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="拍照" />
+                android:text="拍照"
+                android:background="@drawable/top_button_shap"
+                style="@style/roundbutton"
+                android:textColor="@color/black"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="90dp"
@@ -109,7 +112,7 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="46dp"
         android:orientation="horizontal">
         <LinearLayout
             android:layout_width="0dp"

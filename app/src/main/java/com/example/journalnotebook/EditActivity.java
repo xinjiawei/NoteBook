@@ -233,8 +233,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
             }
         });
 
-
-
         //TODO 文件夹 文件的调用方法
         File appDir = new File(Environment.getExternalStorageDirectory(), "Mycamera");
         if (!appDir.exists()) {
@@ -336,13 +334,15 @@ protected void takePic() {
 
 
     public void autoSetMessage() {
+         //数据回调
         String dates = date.getText().toString() + " " + time.getText().toString();
         if (openMode == 4) {
+            //新建，但是啥也没填
             if (editText.getText().toString().length() == 0) {
-                intent.putExtra("mode", -1); //没有信息
+                intent.putExtra("mode", -1);
 
             } else {
-                intent.putExtra("mode", 0); // 有一个新的
+                intent.putExtra("mode", 0);
                 intent.putExtra("content", editText.getText().toString());
 
                 intent.putExtra("endpoint", editText2.getText().toString());
@@ -358,17 +358,19 @@ protected void takePic() {
             }
         }
         else {
+            // 没有修改
             if (editText.getText().toString().equals(old_content) &&
                     editText2.getText().toString().equals(old_endpoint) &&
                     editText3.getText().toString().equals(old_price) &&
                     editText4.getText().toString().equals(old_text) &&
                     halfname == 0 &&
                     dates.equals(old_time) && !tagChange) {
-                intent.putExtra("mode", -1); // 没有修改
+                intent.putExtra("mode", -1);
                 Log.e("1213-3", String.valueOf(halfname));
             }
             else {
-                intent.putExtra("mode", 1); //有修改
+                //有修改
+                intent.putExtra("mode", 1);
                 intent.putExtra("content", editText.getText().toString());
 
                 intent.putExtra("endpoint", editText2.getText().toString());
@@ -384,7 +386,6 @@ protected void takePic() {
                     intent.putExtra("fileid", halfname);
                     //if (old_fileid.to.equals(halfname))
                 }
-
                 //intent.putExtra("fileid", 1640537623616L);
                 intent.putExtra("filetag", "00");
 
@@ -436,14 +437,7 @@ protected void takePic() {
         dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                /*
-                mYear = year;
-                mMonth = month;
-                mDay = dayOfMonth;
-
-                 */
                 setDateTV(year, month+1, dayOfMonth);
-
             }
         };
         timeSetListener = new TimePickerDialog.OnTimeSetListener() {
@@ -514,8 +508,8 @@ protected void takePic() {
                         // 将图片解析成Bitmap对象
                         Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
                         cameraPicture.setImageBitmap(bitmap);
-
-                        saveToSystemGallery(bitmap);//rename and 将图片保存到本地
+                        //rename and 将图片保存到本地
+                        saveToSystemGallery(bitmap);
                         Toast.makeText(getApplicationContext(),"图片loading成功！",Toast.LENGTH_SHORT).show();
 
                     } catch (FileNotFoundException e) {
@@ -547,7 +541,6 @@ protected void takePic() {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         // 其次把文件插入到系统图库
         try {
             MediaStore.Images.Media.insertImage(getContentResolver(),
@@ -555,11 +548,10 @@ protected void takePic() {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
-        //sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(file.getAbsolutePath())));
         Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         Uri uri = Uri.fromFile(file);
         intent.setData(uri);
-        sendBroadcast(intent);// 发送广播，通知图库更新
+        // 发送广播，通知图库更新
+        sendBroadcast(intent);
     }
 }
