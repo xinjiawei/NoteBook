@@ -140,7 +140,7 @@ public class MainActivity extends BaseActivity implements
 
                 Intent intent = new Intent(MainActivity.this, EditActivity.class);
                 intent.putExtra("mode", 4);  //新建日记
-                intent.putExtra("fileid", 0);//pic
+                intent.putExtra("fileid", 1);//pic
                 startActivityForResult(intent, 1);
 
 
@@ -226,12 +226,12 @@ public class MainActivity extends BaseActivity implements
             String endpoint = data.getExtras().getString("endpoint");
             String price = data.getExtras().getString("price");
             String text = data.getExtras().getString("text");
-            int fileid = data.getExtras().getInt("fileid");
+            long fileid = data.getExtras().getLong("fileid",1L);
             String filetag = data.getExtras().getString("filetag");
 
             String time = data.getExtras().getString("time");
             int tag = data.getExtras().getInt("tag", 1);
-            Log.e("1203-1", content + "," + endpoint + "," + price + ","+ text);
+            Log.e("1203-1 更新当前笔记", content + "," + endpoint + "," + price + "," + text+"," + fileid);
 
             Note newNote = new Note(content,endpoint,price,text,fileid,filetag,time, tag);
             newNote.setId(note_Id);
@@ -246,12 +246,12 @@ public class MainActivity extends BaseActivity implements
             String endpoint = data.getExtras().getString("endpoint");
             String price = data.getExtras().getString("price");
             String text = data.getExtras().getString("text");
-            int fileid = data.getExtras().getInt("fileid");
+            long fileid = data.getExtras().getLong("fileid",1L);
             String filetag = data.getExtras().getString("filetag");
 
             String time = data.getExtras().getString("time");
             int tag = data.getExtras().getInt("tag", 1);
-            Log.e("1203-2", content + "," + endpoint + "," + price + ","+ text);
+            Log.e("1203-2 创建新笔记", content + "," + endpoint + "," + price + ","+ text + "," + fileid);
 
             Note newNote = new Note(content,endpoint,price,text,fileid,filetag,time, tag);
             BaseCrud op = new BaseCrud(context);

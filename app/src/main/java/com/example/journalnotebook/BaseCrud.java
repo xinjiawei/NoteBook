@@ -82,7 +82,8 @@ public class BaseCrud {
                 note.setEndpoint(cursor.getString(cursor.getColumnIndex(NoteDatabase.ENDPOINT)));
                 note.setPrice(cursor.getString(cursor.getColumnIndex(NoteDatabase.PRICE)));
                 note.setText(cursor.getString(cursor.getColumnIndex(NoteDatabase.TEXT)));
-                note.setFileid(cursor.getInt(cursor.getColumnIndex(NoteDatabase.FILEID)));
+                //TODO REMEMBER TO CAREFULNESS
+                note.setFileid(cursor.getLong(cursor.getColumnIndex(NoteDatabase.FILEID)));
                 note.setFiletag(cursor.getString(cursor.getColumnIndex(NoteDatabase.FILETAG)));
 
                 note.setTime(cursor.getString(cursor.getColumnIndex(NoteDatabase.TIME)));

@@ -49,6 +49,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
     private String old_price = "";
     private String old_text = "";
     private long old_fileid;
+    private long halfname;
     private String old_filetag = "";
 
     private DatePickerDialog.OnDateSetListener dateSetListener;
@@ -131,6 +132,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
             //Log.e("1202",old_endpoint);
             old_price = getIntent.getStringExtra("price");old_text = getIntent.getStringExtra("text");
             old_fileid = getIntent.getLongExtra("fileid", 1);
+            Log.e("1212-3", String.valueOf(old_fileid));
             old_filetag = getIntent.getStringExtra("filetag");
 
             old_time = getIntent.getStringExtra("time");
@@ -178,15 +180,15 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
                 // 动态申请权限
                 if (ContextCompat.checkSelfPermission(EditActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(EditActivity.this, new String[]{Manifest.permission.CAMERA}, TAKE_PHOTO);
-                    /*
-                    if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                        startCamera();
-                    }
-                     */
+
                 } else {
-                    // 启动相机程序
-                    takePic();
-                    Log.e("1211-2","startCamera");
+                    if (ContextCompat.checkSelfPermission(EditActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(EditActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, CHOOSE_PHOTO);
+                    }else {
+                        takePic();
+                        Log.e("1211-2","startCamera");
+                    }
+
                 }
             }
         });
@@ -198,8 +200,8 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
         if (!appDir.exists()) {
             appDir.mkdir();
         }
-        String fileName = "1640510628736" +".jpg";
-        // String fileName = old_fileid +".jpg";
+        //String fileName = "1640510628736" +".jpg";
+        String fileName = old_fileid +".jpg";
         File file = new File(appDir, fileName);
 
 
@@ -224,26 +226,27 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
             // 将File对象转换成一个封装过的Uri对象
             imageUri = FileProvider.getUriForFile(this, "com.example.journalnotebook.fileprovider", outputImage);
             files = FileProvider.getUriForFile(this, "com.example.journalnotebook.fileprovider", file);
-            Log.e("MainActivity", outputImage.toString() + "手机系统版本高于Android7.0");
+            Log.e("MainActivity", outputImage.toString() + " 手机系统版本高于Android7.0");
         } else {
             // 将File对象转换为Uri对象，这个Uri标识着output_image.jpg这张图片的本地真实路径
-            Log.e("MainActivity", outputImage.toString() + "手机系统版本低于Android7.0");
+            Log.e("MainActivity", outputImage.toString() + " 手机系统版本低于Android7.0");
             imageUri = Uri.fromFile(outputImage);
             files = Uri.fromFile(file);
         }
 
-        //old_fileid = getIntent.getLongExtra("fileid", 1);
-        if(old_fileid == 0 ) {
-            Log.e("1212", String.valueOf(old_fileid));
+        long old_fileid2 = getIntent.getLongExtra("fileid", 1);
+        if(old_fileid2 == 1 ) {
+            //新建日记时候加载默认图片
+            Log.e("1212-1", String.valueOf(old_fileid2));
             // 将图片解析成Bitmap对象
             Resources res = cameraPicture.getContext().getResources();
             int id = R.drawable.bgm_nodata;
             Bitmap b = BitmapFactory.decodeResource(res, id);
             //Bitmap bitmap2 = BitmapFactory.decodeStream(getContentResolver().openInputStream(files));
             cameraPicture.setImageBitmap(b);
-        }else{
-
-            Log.e("1212", String.valueOf(old_fileid));
+        }else {
+            //编辑笔记加载对应名称的旧图片
+            Log.e("1212-2", String.valueOf(old_fileid2));
             try {
                 // 将图片解析成Bitmap对象
                 Bitmap bitmap2 = BitmapFactory.decodeStream(getContentResolver().openInputStream(files));
@@ -251,9 +254,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-
-
-
         }
 
 
@@ -276,11 +276,6 @@ protected void takePic() {
         startCamera();
     }
 }
-
-
-
-
-
 
     @Override
     protected void needRefresh() {
@@ -320,7 +315,8 @@ protected void takePic() {
                 intent.putExtra("price", editText3.getText().toString());
                 intent.putExtra("text", editText4.getText().toString());
                 //TODO
-                intent.putExtra("fileid", 1);
+                Log.e("1213", String.valueOf(halfname));
+                intent.putExtra("fileid", halfname);
                 intent.putExtra("filetag", "00");
 
                 intent.putExtra("time", date.getText().toString() + " " + time.getText().toString());
@@ -332,6 +328,7 @@ protected void takePic() {
                     editText2.getText().toString().equals(old_endpoint) &&
                     editText3.getText().toString().equals(old_price) &&
                     editText4.getText().toString().equals(old_text) &&
+
                     dates.equals(old_time) && !tagChange)
                 intent.putExtra("mode", -1); // 没有修改
             else {
@@ -342,7 +339,7 @@ protected void takePic() {
                 intent.putExtra("price", editText3.getText().toString());
                 intent.putExtra("text", editText4.getText().toString());
                 //TODO
-                intent.putExtra("fileid", 1);
+                intent.putExtra("fileid", 1640537623616L);
                 intent.putExtra("filetag", "00");
 
                 //TODO time THE PLUG PUT intent.putExtra("time", old_time);
@@ -454,13 +451,45 @@ protected void takePic() {
         }
     }
 
+    private void startCamera() {
+        Intent intent4 = new Intent("android.media.action.IMAGE_CAPTURE");
+        // 指定图片的输出地址为imageUri
+        intent4.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(intent4, TAKE_PHOTO);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case TAKE_PHOTO:
+                if (requestCode == TAKE_PHOTO && resultCode == RESULT_OK) {
+                    try {
+                        // 将图片解析成Bitmap对象
+                        Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
+                        cameraPicture.setImageBitmap(bitmap);
+
+                        saveToSystemGallery(bitmap);//rename and 将图片保存到本地
+                        Toast.makeText(getApplicationContext(),"图片loading成功！",Toast.LENGTH_SHORT).show();
+
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
     public void saveToSystemGallery(Bitmap bmp) {
         // 首先保存图片
         File appDir = new File(Environment.getExternalStorageDirectory(), "Mycamera");
         if (!appDir.exists()) {
             appDir.mkdir();
         }
-        String fileName = System.currentTimeMillis() + ".jpg";
+        halfname = System.currentTimeMillis();
+        String fileName =  halfname + ".jpg";
         File file = new File(appDir, fileName);
         try {
             FileOutputStream fos = new FileOutputStream(file);
@@ -486,42 +515,5 @@ protected void takePic() {
         Uri uri = Uri.fromFile(file);
         intent.setData(uri);
         sendBroadcast(intent);// 发送广播，通知图库更新
-    }
-
-
-
-
-
-
-
-    private void startCamera() {
-        Intent intent4 = new Intent("android.media.action.IMAGE_CAPTURE");
-        // 指定图片的输出地址为imageUri
-        intent4.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        startActivityForResult(intent4, TAKE_PHOTO);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case TAKE_PHOTO:
-                if (requestCode == TAKE_PHOTO && resultCode == RESULT_OK) {
-                    try {
-                        // 将图片解析成Bitmap对象
-                        Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
-                        cameraPicture.setImageBitmap(bitmap);
-
-                        saveToSystemGallery(bitmap);//将图片保存到本地
-                        Toast.makeText(getApplicationContext(),"图片保存成功！",Toast.LENGTH_SHORT).show();
-
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-            default:
-                break;
-        }
     }
 }

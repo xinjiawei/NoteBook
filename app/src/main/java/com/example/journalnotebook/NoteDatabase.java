@@ -33,7 +33,7 @@ public class NoteDatabase extends SQLiteOpenHelper {
                 + ENDPOINT + " TEXT NOT NULL,"
                 + PRICE + " TEXT NOT NULL,"
                 + TEXT + " TEXT NOT NULL,"
-                + FILEID + " INTEGER DEFAULT 1,"
+                + FILEID + " INTEGER NOT NULL,"
                 + FILETAG + " TEXT DEFAULT 'default.png',"
                 + TIME + " TEXT NOT NULL,"
                 + MODE + " INTEGER DEFAULT 1)"
