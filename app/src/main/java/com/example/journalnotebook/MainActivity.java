@@ -140,12 +140,68 @@ public class MainActivity extends BaseActivity implements
 
                 Intent intent = new Intent(MainActivity.this, EditActivity.class);
                 intent.putExtra("mode", 4);  //新建日记
+                intent.putExtra("fileid", 0);//pic
                 startActivityForResult(intent, 1);
 
 
             }
         });
 
+    }
+
+    //跳转编辑界面
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        switch (parent.getId()) {
+            case R.id.lv:
+                Note curNote = (Note) parent.getItemAtPosition(position);
+                Intent intent = new Intent(MainActivity.this, EditActivity.class);
+                intent.putExtra("content", curNote.getContent());
+
+                intent.putExtra("endpoint", curNote.getEndpoint());
+                intent.putExtra("price", curNote.getPrice());
+                intent.putExtra("text", curNote.getText());
+                intent.putExtra("fileid", curNote.getFileid());
+                intent.putExtra("filetag", curNote.getFiletag());
+
+                intent.putExtra("id", curNote.getId());
+                intent.putExtra("time", curNote.getTime());
+                intent.putExtra("mode", 3);
+                intent.putExtra("tag", curNote.getTag());
+                Log.e("1201"," /curNote.getContent() :" + curNote.getContent()+ " /curNote.getId():" +
+                        curNote.getId() + " /curNote.getTime(): +" + curNote.getTime() + " /curNote.getTag(): " +
+                        curNote.getTag());
+                startActivityForResult(intent, 1);
+                break;
+            case R.id.lv_plan:
+                break;
+        }
+    }
+
+    //长按删除日记
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        final Note note = noteList.get(position);
+        new AlertDialog.Builder(MainActivity.this)
+                .setTitle("确定")
+                .setMessage("确定要删除此条日记吗hh?")
+                .setIcon(R.drawable.ic_baseline_keyboard_voice_24)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        BaseCrud op = new BaseCrud(context);
+                        op.open();
+                        op.removeNote(note);
+                        op.close();
+                        refreshListView();
+                    }
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).create().show();
+        return true;
     }
 
     private void refreshLvVisibility() {
@@ -276,60 +332,7 @@ public class MainActivity extends BaseActivity implements
         }
     }
 
-    //主界面跳转编辑界面
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        switch (parent.getId()) {
-            case R.id.lv:
-                Note curNote = (Note) parent.getItemAtPosition(position);
-                Intent intent = new Intent(MainActivity.this, EditActivity.class);
-                intent.putExtra("content", curNote.getContent());
 
-                intent.putExtra("endpoint", curNote.getEndpoint());
-                intent.putExtra("price", curNote.getPrice());
-                intent.putExtra("text", curNote.getText());
-                intent.putExtra("fileid", curNote.getFileid());
-                intent.putExtra("filetag", curNote.getFiletag());
-
-                intent.putExtra("id", curNote.getId());
-                intent.putExtra("time", curNote.getTime());
-                intent.putExtra("mode", 3);
-                intent.putExtra("tag", curNote.getTag());
-                Log.e("1201"," /curNote.getContent() :" + curNote.getContent()+ " /curNote.getId():" +
-                        curNote.getId() + " /curNote.getTime(): +" + curNote.getTime() + " /curNote.getTag(): " +
-                        curNote.getTag());
-                startActivityForResult(intent, 1);
-                break;
-            case R.id.lv_plan:
-                break;
-        }
-    }
-
-    //长按删除日记
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                final Note note = noteList.get(position);
-                new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("确定")
-                        .setMessage("确定要删除此条日记吗hh?")
-                        .setIcon(R.drawable.ic_baseline_keyboard_voice_24)
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                BaseCrud op = new BaseCrud(context);
-                                op.open();
-                                op.removeNote(note);
-                                op.close();
-                                refreshListView();
-                            }
-                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).create().show();
-        return true;
-    }
 
     //格式转换string -> milliseconds
     @RequiresApi(api = Build.VERSION_CODES.N)
