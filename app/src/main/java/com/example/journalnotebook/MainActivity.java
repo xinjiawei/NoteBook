@@ -65,16 +65,12 @@ public class MainActivity extends BaseActivity implements
 
     public static int curId = 5;
 
-    String[] list_String = {"before one month", "before three months", "before six months", "before one year"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setStatusBarColor(getResources().getColor(R.color.greyMain));
         setContentView(R.layout.activity_main);
-        //实例化闹钟管理器
-        //alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        //achievement = new Achievement(context);
         initView();
 
     }
@@ -313,7 +309,7 @@ public class MainActivity extends BaseActivity implements
         op.open();
         if (noteList.size() > 0) noteList.clear();
         noteList.addAll(op.getAllNotes());
-        //排序
+        //这部分排序
         if (sharedPreferences.getBoolean("reverseSort", false)) sortNotes(noteList, 2);
         else sortNotes(noteList, 1);
         op.close();

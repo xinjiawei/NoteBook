@@ -49,7 +49,7 @@ public class NoteAdapter extends BaseAdapter implements Filterable {
 
         //设置文本到TextView
         String allText = noteList.get(position).getContent();
-        tv_content.setText(allText);
+        tv_content.setText("从  " + allText + " 出发的旅程");
         tv_time.setText(noteList.get(position).getTime());
 
         //存储笔记到tag

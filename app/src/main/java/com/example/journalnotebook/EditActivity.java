@@ -7,8 +7,10 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -49,7 +51,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
     private String old_price = "";
     private String old_text = "";
     private long old_fileid;
-    private long halfname;
+    private long halfname = 0;
     private String old_filetag = "";
 
     private DatePickerDialog.OnDateSetListener dateSetListener;
@@ -179,11 +181,49 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
             public void onClick(View v) {
                 // 动态申请权限
                 if (ContextCompat.checkSelfPermission(EditActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(EditActivity.this, new String[]{Manifest.permission.CAMERA}, TAKE_PHOTO);
 
+                    AlertDialog alertDialog2 = new AlertDialog.Builder(cameraPicture.getContext())
+                            .setTitle("请求访问摄像头权限")
+                            .setMessage("授权摄像头权限后请再次尝试拍照")
+                            .setIcon(R.mipmap.ic_launcher)
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {//添加"Yes"按钮
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    ActivityCompat.requestPermissions(EditActivity.this, new String[]{Manifest.permission.CAMERA}, TAKE_PHOTO);
+                                    Toast.makeText(getApplicationContext(),"授权摄像头权限后请再次尝试拍照！",Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {//添加"Yes"按钮
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Toast.makeText(EditActivity.this, "授权摄像头权限后才能拍照哦!", Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .create();
+                    alertDialog2.show();
                 } else {
                     if (ContextCompat.checkSelfPermission(EditActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(EditActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, CHOOSE_PHOTO);
+
+                        AlertDialog alertDialog2 = new AlertDialog.Builder(cameraPicture.getContext())
+                                .setTitle("还差一步，请授权访问手机存储")
+                                .setMessage("授权后请再次尝试拍照!")
+                                .setIcon(R.mipmap.ic_launcher)
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {//添加"Yes"按钮
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        ActivityCompat.requestPermissions(EditActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, CHOOSE_PHOTO);
+                                        Toast.makeText(getApplicationContext(),"授权后请再次尝试拍照！",Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {//添加"Yes"按钮
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        Toast.makeText(EditActivity.this, "授权访问手机存储后才能拍照哦!", Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .create();
+                        alertDialog2.show();
+
                     }else {
                         takePic();
                         Log.e("1211-2","startCamera");
@@ -234,10 +274,10 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
             files = Uri.fromFile(file);
         }
 
-        long old_fileid2 = getIntent.getLongExtra("fileid", 1);
-        if(old_fileid2 == 1 ) {
+        //long old_fileid2 = getIntent.getLongExtra("fileid", 1);
+        if(old_fileid == 1 ) {
             //新建日记时候加载默认图片
-            Log.e("1212-1", String.valueOf(old_fileid2));
+            Log.e("1212-1", String.valueOf(old_fileid));
             // 将图片解析成Bitmap对象
             Resources res = cameraPicture.getContext().getResources();
             int id = R.drawable.bgm_nodata;
@@ -246,7 +286,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
             cameraPicture.setImageBitmap(b);
         }else {
             //编辑笔记加载对应名称的旧图片
-            Log.e("1212-2", String.valueOf(old_fileid2));
+            Log.e("1212-2", String.valueOf(old_fileid));
             try {
                 // 将图片解析成Bitmap对象
                 Bitmap bitmap2 = BitmapFactory.decodeStream(getContentResolver().openInputStream(files));
@@ -255,12 +295,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
                 e.printStackTrace();
             }
         }
-
-
-
-
-
-
 
         //获取保存的背景色
         getWindow().setBackgroundDrawableResource(curColor[MainActivity.curId]);
@@ -315,7 +349,7 @@ protected void takePic() {
                 intent.putExtra("price", editText3.getText().toString());
                 intent.putExtra("text", editText4.getText().toString());
                 //TODO
-                Log.e("1213", String.valueOf(halfname));
+                Log.e("1213-1", String.valueOf(halfname));
                 intent.putExtra("fileid", halfname);
                 intent.putExtra("filetag", "00");
 
@@ -328,9 +362,11 @@ protected void takePic() {
                     editText2.getText().toString().equals(old_endpoint) &&
                     editText3.getText().toString().equals(old_price) &&
                     editText4.getText().toString().equals(old_text) &&
-
-                    dates.equals(old_time) && !tagChange)
+                    halfname == 0 &&
+                    dates.equals(old_time) && !tagChange) {
                 intent.putExtra("mode", -1); // 没有修改
+                Log.e("1213-3", String.valueOf(halfname));
+            }
             else {
                 intent.putExtra("mode", 1); //有修改
                 intent.putExtra("content", editText.getText().toString());
@@ -338,8 +374,18 @@ protected void takePic() {
                 intent.putExtra("endpoint", editText2.getText().toString());
                 intent.putExtra("price", editText3.getText().toString());
                 intent.putExtra("text", editText4.getText().toString());
-                //TODO
-                intent.putExtra("fileid", 1640537623616L);
+
+                //TODO reedit the pic,need to save the new picdata, justify weather change the pic
+                Log.e("1213-2", String.valueOf(halfname));
+
+                if(halfname == 0 ) {
+                    intent.putExtra("fileid", old_fileid);
+                }else {
+                    intent.putExtra("fileid", halfname);
+                    //if (old_fileid.to.equals(halfname))
+                }
+
+                //intent.putExtra("fileid", 1640537623616L);
                 intent.putExtra("filetag", "00");
 
                 //TODO time THE PLUG PUT intent.putExtra("time", old_time);
