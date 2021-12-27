@@ -139,7 +139,7 @@ public class MainActivity extends BaseActivity implements
 
                 Intent intent = new Intent(MainActivity.this, EditActivity.class);
                 intent.putExtra("mode", 4);  //新建日记
-                intent.putExtra("fileid", 1);//pic
+                intent.putExtra("fileid", 1L);//pic
                 startActivityForResult(intent, 1);
 
 

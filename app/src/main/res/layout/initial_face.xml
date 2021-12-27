@@ -14,6 +14,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/top_button_shap"
+        style="@style/roundbutton"
+        android:textColor="@color/black"
         android:layout_marginBottom="100dp">
 
     </Button>

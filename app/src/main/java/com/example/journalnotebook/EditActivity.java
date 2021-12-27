@@ -133,7 +133,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
             old_endpoint = getIntent.getStringExtra("endpoint");
             //Log.e("1202",old_endpoint);
             old_price = getIntent.getStringExtra("price");old_text = getIntent.getStringExtra("text");
-            old_fileid = getIntent.getLongExtra("fileid", 1);
+            old_fileid = getIntent.getLongExtra("fileid", 1L);
             Log.e("1212-3", String.valueOf(old_fileid));
             old_filetag = getIntent.getStringExtra("filetag");
 
@@ -273,7 +273,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener {
         }
 
         //long old_fileid2 = getIntent.getLongExtra("fileid", 1);
-        if(old_fileid == 1 ) {
+        if(old_fileid == 0 ) {
             //新建日记时候加载默认图片
             Log.e("1212-1", String.valueOf(old_fileid));
             // 将图片解析成Bitmap对象
